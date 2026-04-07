@@ -6,7 +6,6 @@ namespace Phone_Book.Menus
 {
     internal class MainMenu
     {
-        
         public static void HomeScreen()
         {
             var choice = AnsiConsole.Prompt(
