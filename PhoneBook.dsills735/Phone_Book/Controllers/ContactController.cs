@@ -60,7 +60,7 @@ namespace Phone_Book.Controllers
                          {
                              ctx.Spinner(Spinner.Known.Aesthetic);
                              db.SaveChanges();
-                             Thread.Sleep(3000);
+                             
                          });
 
             AnsiConsole.MarkupLine("[green]Contact successfully added[/]");
@@ -94,6 +94,7 @@ namespace Phone_Book.Controllers
         }
         internal static void ViewContacts(bool menu)
         {
+
             Contact contact = new Contact();
             using var db = new ContactContext();
             var contacts = db.contacts.ToList();
@@ -144,7 +145,15 @@ namespace Phone_Book.Controllers
         internal static void DeleteContact(Contact contact)
         {
             using var db = new ContactContext();
-            db.contacts.Remove(contact);
+            if (contact != null)
+            {
+                db.contacts.Remove(contact);
+            }
+            else
+            {
+                MainMenu.HomeScreen();
+            }
+
             db.SaveChanges();
         }
     }
