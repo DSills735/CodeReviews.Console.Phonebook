@@ -109,7 +109,7 @@ namespace Phone_Book.Services
             if (contacts == null || !contacts.Any())
             {
                 AnsiConsole.MarkupLine("[yellow]The contact book is empty. No categories to display.[/]");
-                return;
+                MainMenu.HomeScreen();
             }
 
             var uniqueRelationship = contacts
@@ -129,6 +129,7 @@ namespace Phone_Book.Services
         .ToList();
 
             UserInterface.DisplayContacts(filteredContacts);
+
 
         }
 

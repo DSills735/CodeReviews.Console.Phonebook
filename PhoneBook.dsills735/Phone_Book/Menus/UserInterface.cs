@@ -8,8 +8,12 @@ namespace Phone_Book.Menus
     {
         internal static void ShowContactCard(Contact contact)
         {
+            if (contact == null)
+            {
+                MainMenu.HomeScreen();
+            }
             //dont fix this formatting, it is intentional
-            var panel = new Panel($@"Name: {contact.name}
+                var panel = new Panel($@"Name: {contact.name}
 Relationship: {contact.relationship}
 Phone Number: {contact.phoneNumber}
 Email: {contact.email}");
