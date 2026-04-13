@@ -1,168 +1,164 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
-using Phone_Book.Controllers;
+﻿using Phone_Book.Controllers;
 using Phone_Book.Menus;
 using Phone_Book.Models;
 using Spectre.Console;
-using System.ComponentModel.Design;
 
+namespace Phone_Book.Services;
 
-namespace Phone_Book.Services
+internal class ContactService
 {
-    internal class ContactService
+
+
+    internal static void UpdateContact()
     {
-
-
-        internal static void UpdateContact()
+        var contact = GetContactInputList();
+        if (contact != null)
         {
-            var contact = GetContactInputList();
-            if (contact != null)
-            {
-                var choice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                    .Title("What do you want to update?")
-                    .AddChoices(new[]
-                    {
-                    "Name",
-                    "Relationship",
-                    "Email",
-                    "Phone Number",
-                    "Exit to menu"
-                    }));
-
-                switch (choice)
-                {
-                    case "Name":
-                        var name = AnsiConsole.Ask<string>("[blue]Enter the new name[/]");
-                        contact.name = name;
-                        ContactController.UpdateContactInformation(contact);
-                        break;
-
-                    case "Relationship":
-                        var relationship = AnsiConsole.Ask<string>("[blue]Enter the new relationship[/]");
-                        contact.relationship = relationship;
-                        ContactController.UpdateContactInformation(contact);
-                        break;
-
-                    case "Email":
-                        bool valid = false;
-                        var email = "";
-                        while (!valid)
-                        {
-                            email = AnsiConsole.Ask<string>("[blue]Enter the new email[/]");
-                            valid = Validation.Validation.IsTheEmailValid(email);
-                        }
-
-                        contact.email = email;
-                        ContactController.UpdateContactInformation(contact);
-                        break;
-
-                    case "Phone Number":
-                        var phoneNumber = "";
-                        valid = false;
-                        while (!valid)
-                        {
-                            phoneNumber = AnsiConsole.Ask<string>("[blue]Enter the new phone number (Expected Format: (XXX)XXX-XXXX)[/]");
-                            valid = Validation.Validation.IsThePhoneNumberValid(phoneNumber);
-                        }
-                        contact.phoneNumber = phoneNumber;
-                        ContactController.UpdateContactInformation(contact);
-                        break;
-
-                    case "Exit to menu":
-                        Console.Clear();
-                        Menus.MainMenu.HomeScreen();
-                        break;
-                }
-            }
-            else
-            {
-                MainMenu.HomeScreen();
-            }
-        }
-
-        internal static Contact GetContactInputList()
-        {
-            var contacts = ContactController.GetContacts();
-            var contactArray = contacts.Select(x => x.name).ToArray();
-
-            if (contacts == null || !contacts.Any())
-            {
-                AnsiConsole.MarkupLine("[yellow]There are no contacts in the book.[/]");
-                return null;
-            }
-
-            var option = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                    .Title("Choose contact")
-                    .AddChoices(contactArray));
-
-            var id = contacts.Single(x => x.name == option).ContactID;
-
-            var contact = ContactController.GetContactByID(id);
-
-            return contact;
-        }
-
-        internal static void GetRelationshipInputList()
-        {
-
-            var contacts = ContactController.GetContacts();
-            if (contacts == null || !contacts.Any())
-            {
-                AnsiConsole.MarkupLine("[yellow]The contact book is empty. No categories to display.[/]");
-                MainMenu.HomeScreen();
-            }
-
-            var uniqueRelationship = contacts
-                .Select(x => x.relationship)
-                .Distinct()
-                .OrderBy(r => r)
-                .ToList();
-
-            var chosenRelationship = AnsiConsole.Prompt(
-        new SelectionPrompt<string>()
-            .Title("Select a [green]relationship[/] category:")
-            .PageSize(10)
-            .AddChoices(uniqueRelationship));
-
-            var filteredContacts = contacts
-        .Where(x => x.relationship == chosenRelationship)
-        .ToList();
-
-            UserInterface.DisplayContacts(filteredContacts);
-
-
-        }
-
-        internal static void DeleteContact()
-        {
-            var contact = GetContactInputList();
-            ContactController.DeleteContact(contact);
-            AnsiConsole.MarkupLine("[green]Contact successfully deleted[/]");
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
+                .Title("What do you want to update?")
+                .AddChoices(new[]
+                {
+                "Name",
+                "Relationship",
+                "Email",
+                "Phone Number",
+                "Exit to menu"
+                }));
 
-                    .Title("What next?")
-                    .AddChoices(new[]
-                    {
-                         "Delete another contact",
-                         "Home Screen",
-                         "Exit"
-                    }));
             switch (choice)
             {
-                case "Delete another contact":
-                    Console.Clear();
-                    DeleteContact();
+                case "Name":
+                    var name = AnsiConsole.Ask<string>("[blue]Enter the new name[/]");
+                    contact.name = name;
+                    ContactController.UpdateContactInformation(contact);
                     break;
-                case "Home Screen":
+
+                case "Relationship":
+                    var relationship = AnsiConsole.Ask<string>("[blue]Enter the new relationship[/]");
+                    contact.relationship = relationship;
+                    ContactController.UpdateContactInformation(contact);
+                    break;
+
+                case "Email":
+                    bool valid = false;
+                    var email = "";
+                    while (!valid)
+                    {
+                        email = AnsiConsole.Ask<string>("[blue]Enter the new email[/]");
+                        valid = Validation.Validation.IsTheEmailValid(email);
+                    }
+
+                    contact.email = email;
+                    ContactController.UpdateContactInformation(contact);
+                    break;
+
+                case "Phone Number":
+                    var phoneNumber = "";
+                    valid = false;
+                    while (!valid)
+                    {
+                        phoneNumber = AnsiConsole.Ask<string>("[blue]Enter the new phone number (Expected Format: (XXX)XXX-XXXX)[/]");
+                        valid = Validation.Validation.IsThePhoneNumberValid(phoneNumber);
+                    }
+                    contact.phoneNumber = phoneNumber;
+                    ContactController.UpdateContactInformation(contact);
+                    break;
+
+                case "Exit to menu":
                     Console.Clear();
                     Menus.MainMenu.HomeScreen();
                     break;
-
-                case "Exit":
-                    Environment.Exit(0);
-                    break;
             }
+        }
+        else
+        {
+            MainMenu.HomeScreen();
+        }
+    }
+
+    internal static Contact GetContactInputList()
+    {
+        var contacts = ContactController.GetContacts();
+        var contactArray = contacts.Select(x => x.name).ToArray();
+
+        if (contacts == null || !contacts.Any())
+        {
+            AnsiConsole.MarkupLine("[yellow]There are no contacts in the book.[/]");
+            return null;
+        }
+
+        var option = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                .Title("Choose contact")
+                .AddChoices(contactArray));
+
+        var id = contacts.Single(x => x.name == option).ContactID;
+
+        var contact = ContactController.GetContactByID(id);
+
+        return contact;
+    }
+
+    internal static void GetRelationshipInputList()
+    {
+
+        var contacts = ContactController.GetContacts();
+        if (contacts == null || !contacts.Any())
+        {
+            AnsiConsole.MarkupLine("[yellow]The contact book is empty. No categories to display.[/]");
+            MainMenu.HomeScreen();
+        }
+
+        var uniqueRelationship = contacts
+            .Select(x => x.relationship)
+            .Distinct()
+            .OrderBy(r => r)
+            .ToList();
+
+        var chosenRelationship = AnsiConsole.Prompt(
+    new SelectionPrompt<string>()
+        .Title("Select a [green]relationship[/] category:")
+        .PageSize(10)
+        .AddChoices(uniqueRelationship));
+
+        var filteredContacts = contacts
+    .Where(x => x.relationship == chosenRelationship)
+    .ToList();
+
+        UserInterface.DisplayContacts(filteredContacts);
+
+
+    }
+
+    internal static void DeleteContact()
+    {
+        var contact = GetContactInputList();
+        ContactController.DeleteContact(contact);
+        AnsiConsole.MarkupLine("[green]Contact successfully deleted[/]");
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+
+                .Title("What next?")
+                .AddChoices(new[]
+                {
+                     "Delete another contact",
+                     "Home Screen",
+                     "Exit"
+                }));
+        switch (choice)
+        {
+            case "Delete another contact":
+                Console.Clear();
+                DeleteContact();
+                break;
+            case "Home Screen":
+                Console.Clear();
+                Menus.MainMenu.HomeScreen();
+                break;
+
+            case "Exit":
+                Environment.Exit(0);
+                break;
         }
     }
 }

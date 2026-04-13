@@ -2,47 +2,46 @@
 using Spectre.Console;
 
 
-namespace Phone_Book.Menus
+namespace Phone_Book.Menus;
+
+internal class UserInterface
 {
-    internal class UserInterface
+    internal static void ShowContactCard(Contact contact)
     {
-        internal static void ShowContactCard(Contact contact)
+        if (contact == null)
         {
-            if (contact == null)
-            {
-                MainMenu.HomeScreen();
-            }
-            //dont fix this formatting, it is intentional
-                var panel = new Panel($@"Name: {contact.name}
+            MainMenu.HomeScreen();
+        }
+        //dont fix this formatting, it is intentional
+            var panel = new Panel($@"Name: {contact.name}
 Relationship: {contact.relationship}
 Phone Number: {contact.phoneNumber}
 Email: {contact.email}");
-            panel.Header = new PanelHeader($"Contact Information for {contact.name}");
-            panel.Padding = new Padding(2, 2, 2, 2);
+        panel.Header = new PanelHeader($"Contact Information for {contact.name}");
+        panel.Padding = new Padding(2, 2, 2, 2);
 
-            AnsiConsole.Write(panel);
+        AnsiConsole.Write(panel);
 
-            Console.WriteLine("Press any key to return to the home screen...");
-            Console.ReadKey();
-            Console.Clear();
-            MainMenu.HomeScreen();
-        }
-
-        internal static void DisplayContacts(List<Contact> contacts)
-        {
-            var table = new Table();
-            table.AddColumn("Name");
-            table.AddColumn("Relationship");
-            table.AddColumn("Email");
-            table.AddColumn("Phone Number");
-            foreach (var contact in contacts)
-            {
-                table.AddRow(contact.name!, contact.relationship!, contact.email!, contact.phoneNumber!);
-            }
-            AnsiConsole.Write(table);
-        }
-
-
-
+        Console.WriteLine("Press any key to return to the home screen...");
+        Console.ReadKey();
+        Console.Clear();
+        MainMenu.HomeScreen();
     }
+
+    internal static void DisplayContacts(List<Contact> contacts)
+    {
+        var table = new Table();
+        table.AddColumn("Name");
+        table.AddColumn("Relationship");
+        table.AddColumn("Email");
+        table.AddColumn("Phone Number");
+        foreach (var contact in contacts)
+        {
+            table.AddRow(contact.name!, contact.relationship!, contact.email!, contact.phoneNumber!);
+        }
+        AnsiConsole.Write(table);
+    }
+
+
+
 }

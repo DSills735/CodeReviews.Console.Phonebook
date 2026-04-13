@@ -1,17 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Phone_Book.Models;
 
+namespace Phone_Book.Context;
 
-namespace Phone_Book.Context
+internal class ContactContext : DbContext
 {
-    internal class ContactContext : DbContext
+    public static string ConnectionString { get; set; } = "";
+
+    public DbSet<Contact> Contacts { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        public DbSet<Contact> contacts { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\PhoneBook");
-        }
-
+        optionsBuilder.UseSqlServer(ConnectionString);
     }
 }
